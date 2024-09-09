@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weather/weather.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/pages/const.dart';
+import 'package:weather_app/pages/notification_sheet.dart';
+import 'package:weather_app/pages/search_city.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -14,14 +16,26 @@ class _WeatherPageState extends State<WeatherPage> {
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
 
   Weather? _weather;
+  String _selectedCity = "Islamabad";
 
   @override
   void initState() {
     super.initState();
-    _wf.currentWeatherByCityName("Islamabad").then((w) {
+    _fetchWeather();
+  }
+
+  void _fetchWeather() {
+    _wf.currentWeatherByCityName(_selectedCity).then((w) {
       setState(() {
         _weather = w;
       });
+    });
+  }
+
+  void _onCitySelected(String city) {
+    setState(() {
+      _selectedCity = city;
+      _fetchWeather();
     });
   }
 
@@ -52,11 +66,13 @@ class _WeatherPageState extends State<WeatherPage> {
     }
     return Column(
       children: [
-        _topBar(),
+        _topBar(context),
         Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              _weatherIcon(), // Added weather icon
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _weatherInfoContainer(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _forecastReportButton(),
@@ -67,7 +83,7 @@ class _WeatherPageState extends State<WeatherPage> {
     );
   }
 
-  Widget _topBar() {
+  Widget _topBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
       child: Row(
@@ -75,14 +91,40 @@ class _WeatherPageState extends State<WeatherPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.location_on, color: Colors.white, size: 24),
+              Image.asset(
+                'icons/location.png',
+                width: 24,
+                height: 24,
+              ),
               const SizedBox(width: 5),
-              Text(
-                _weather?.areaName ?? "Location",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CitySelectionPage(
+                        onCitySelected: _onCitySelected,
+                      ),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      _selectedCity,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Image.asset(
+                      'icons/arrow_down.png',
+                      width: 24,
+                      height: 24,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -91,11 +133,39 @@ class _WeatherPageState extends State<WeatherPage> {
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications, color: Colors.white),
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
+                    builder: (context) => const NotificationsSheet(),
+                  );
+                },
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _weatherIcon() {
+    String iconCode = _weather?.weatherIcon ?? "01d";
+
+    // Base URL for OpenWeatherMap icons
+    String baseUrl = "http://openweathermap.org/img/wn/";
+
+    // Construct the icon URL
+    String iconUrl = "$baseUrl$iconCode.png";
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0.0), // Adjust padding as needed
+      child: Image.network(
+        iconUrl,
+        width: 100, // Increase width
+        height: 100, // Increase height
+        fit: BoxFit.contain, // Adjust to fit the container
       ),
     );
   }
@@ -237,7 +307,7 @@ class _WeatherPageState extends State<WeatherPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
         ),
         onPressed: () {},
         child: const Row(
