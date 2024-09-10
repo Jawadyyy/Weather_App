@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/pages/const.dart';
 import 'package:weather_app/pages/notification_sheet.dart';
 import 'package:weather_app/pages/search_city.dart';
+import 'package:weather_app/pages/weather_forecast.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -75,7 +76,7 @@ class _WeatherPageState extends State<WeatherPage> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _weatherInfoContainer(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              _forecastReportButton(),
+              _forecastReportButton(context),
             ],
           ),
         ),
@@ -286,7 +287,7 @@ class _WeatherPageState extends State<WeatherPage> {
     );
   }
 
-  Widget _forecastReportButton() {
+  Widget _forecastReportButton(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
@@ -309,7 +310,12 @@ class _WeatherPageState extends State<WeatherPage> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ForecastScreen()),
+          );
+        },
         child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [

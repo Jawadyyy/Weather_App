@@ -9,14 +9,14 @@ class NotificationsSheet extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
-            blurRadius: 10,
-            spreadRadius: 5,
+            blurRadius: 12,
+            spreadRadius: 6,
             offset: Offset(0, 3),
           ),
         ],
@@ -24,13 +24,14 @@ class NotificationsSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Handle for the bottom sheet
           Container(
-            height: 4,
-            width: 40,
-            margin: const EdgeInsets.symmetric(vertical: 12),
+            height: 6,
+            width: 50,
+            margin: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
+              color: Colors.grey[400],
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
           // Header Section
@@ -40,14 +41,14 @@ class NotificationsSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Your notifications',
+                  'Your Notifications',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF3A3A3A),
+                    color: Color(0xFF2E2E2E),
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 10),
                 Divider(),
               ],
             ),
@@ -61,7 +62,7 @@ class NotificationsSheet extends StatelessWidget {
                 NotificationItem(
                   icon: Icons.wb_sunny_outlined,
                   time: '10 minutes ago',
-                  message: 'A sunny day in your location, consider wearing your UV protection.',
+                  message: 'It\'s sunny in your area. Remember to wear UV protection.',
                   backgroundColor: Color(0xFFE9F5FE),
                 ),
                 SizedBox(height: 16),
@@ -69,14 +70,14 @@ class NotificationsSheet extends StatelessWidget {
                 NotificationItem(
                   icon: Icons.cloud_outlined,
                   time: '1 day ago',
-                  message: "A cloudy day will occur all day long, don't worry about the heat of the sun.",
-                  backgroundColor: Colors.white,
+                  message: "It's going to be cloudy all day. You won't need sunscreen.",
+                  backgroundColor: Color(0xFFF7F7F7),
                 ),
                 NotificationItem(
                   icon: Icons.umbrella_outlined,
                   time: '2 days ago',
-                  message: "Potential for rain today is 84%, don't forget to bring your umbrella.",
-                  backgroundColor: Colors.white,
+                  message: "There's an 84% chance of rain. Don't forget your umbrella!",
+                  backgroundColor: Color(0xFFF7F7F7),
                 ),
               ],
             ),
@@ -95,13 +96,13 @@ class NotificationCategoryTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Text(
         title,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.grey,
+          color: Color(0xFF6C757D),
         ),
       ),
     );
@@ -127,25 +128,42 @@ class NotificationItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.blueAccent),
-          const SizedBox(width: 12),
+          Icon(icon, color: Colors.blueAccent, size: 28),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(time, style: const TextStyle(color: Colors.grey)),
+                Text(
+                  time,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
                 const SizedBox(height: 4),
-                Text(message),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF3A3A3A),
+                  ),
+                ),
               ],
             ),
           ),
-          Icon(Icons.expand_more, color: Colors.grey[400]),
+          Icon(Icons.more_vert, color: Colors.grey[400]),
         ],
       ),
     );
